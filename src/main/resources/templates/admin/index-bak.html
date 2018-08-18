@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='配置库',active='common'">
+<body>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#" id="logo">参数配置中心
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="comm/header::html"></div>
+        <!-- 右侧具体内容栏目 -->
+        <div class="col-md-11">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="btn-group">
+                        <ul class="nav">
+                            <li class="dropdown" id="accountmenu">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">配置项<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">127数据库</a></li>
+                                    <li><a href="#">127Redis</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">JavaScript</a></li>
+                                    <li><a href="#">HTML5</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-1 col-md-offset-8">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary">添加分组</button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover">
+                        <caption>悬停表格布局</caption>
+                        <thead>
+                        <tr>
+                            <th>key</th>
+                            <th>value</th>
+                            <th>备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Tanmay</td>
+                            <td>Bangalore</td>
+                            <td>560001</td>
+                        </tr>
+                        <tr>
+                            <td>Sachin</td>
+                            <td>Mumbai</td>
+                            <td>400003</td>
+                        </tr>
+                        <tr>
+                            <td>Uma</td>
+                            <td>Pune</td>
+                            <td>411027</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover">
+                        <caption>悬停表格布局</caption>
+                        <thead>
+                        <tr>
+                            <th>key</th>
+                            <th>value</th>
+                            <th>备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Tanmay</td>
+                            <td>Bangalore</td>
+                            <td>560001</td>
+                        </tr>
+                        <tr>
+                            <td>Sachin</td>
+                            <td>Mumbai</td>
+                            <td>400003</td>
+                        </tr>
+                        <tr>
+                            <td>Uma</td>
+                            <td>Pune</td>
+                            <td>411027</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="comm/footer::html"></div>
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='App参数管理',active='config',group='app'">
+<body>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}" id="logo">参数配置中心
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{/logout}">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="comm/header::html"></div>
+        <!-- 右侧具体内容栏目 -->
+        <div class="col-md-11">
+            <div class="row">
+                <div class="col-md-12 side" style="background-color:#c4e3f3 ;padding: 0.5em">
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-9">
+
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-yellow" data-toggle="modal" data-target="#addnamespace">添加NS</button>
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-yellow" data-toggle="modal" data-target="#load-pub-namespace">从公共NS导入</button>
+                            </div>
+                            <div class="btn-group dropdown">
+                                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                    <span data-id="" class="load-btn-text" >从已有导入</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu load-env-select" role="menu">
+                                    <!--从已有环境导入下拉框-->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1 side" style="margin-top: 0.5em;padding-top: 0.5em; background-color: #ffffff">
+                    <!--左侧管理按钮-->
+                    <div class="row" style="padding: 1em">
+                        <select class="selectpicker all-app-select" data-width="100%" data-th-title="请选APP" data-style="btn-warning">
+                            <!--项目列表-->
+                        </select>
+
+
+                    </div>
+
+                    <div class="row" style="margin-top: 2.5em">
+                        <!--环境列表-->
+                        <div style="padding: 0.5em;font-size: 16px; font-weight: 300;">
+                            <h6>环境列表</h6>
+                            <ul class="nav nav-pills nav-stacked list-app-env" style="max-width: 260px;">
+                                <!--环境列表-->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12" style="margin-top: 5em;margin-bottom: 0.5em">
+                            <a class="list-group-item hover ng-isolate-scope" data-toggle="modal" data-target="#add-app-modal"><span class="glyphicon glyphicon-plus"></span><span style="padding-left: 0.5em">添加项目</span></a>
+                            <a class="list-group-item hover ng-isolate-scope" data-toggle="modal" data-target="#add-env-modal"><span class="glyphicon glyphicon-plus"></span><span style="padding-left: 0.5em">添加环境</span></a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-11" style="margin-top: 0.5em ;">
+                    <div class="row namespace-list"  >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹出框开始-->
+    <!--弹出窗口 添加APP-->
+    <div class="modal fade" id="add-app-modal" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="">添加APP</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="form-horizontal">
+                            <div class="form-group ">
+                                <label for="add-app-code" class="col-md-3 control-label">AppCode：</label>
+                                <div class="col-md-8 ">
+                                    <input type="text" class="form-control input-lg duiqi" id="add-app-code"
+                                           placeholder="请勿使用中文输入">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-app-name" class="col-md-3 control-label">APP名：</label>
+                                <div class="col-md-8 ">
+                                    <input type="text" class="form-control input-lg duiqi" id="add-app-name"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-app-intro" class="col-md-3 control-label">备注：</label>
+                                <div class="col-md-8">
+                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                              id="add-app-intro"></textarea>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                    </button>
+                    <button type="button" class="btn btn-xs btn-xs btn-green" id="add-app-save">保 存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!--弹出窗口 添加环境-->
+    <div class="modal fade" id="add-env-modal" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加环境</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="form-horizontal">
+                            <div class="form-group ">
+                                <label for="add-env-name" class="col-md-3 control-label">环境名：</label>
+                                <div class="col-md-8 ">
+                                    <input type="text" class="form-control input-lg duiqi" id="add-env-name"
+                                           placeholder="请勿使用中文输入">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="add-env-intro" class="col-md-3 control-label">备注：</label>
+                                <div class="col-md-8">
+                                        <textarea class="form-control input-lg duiqi" rows="3"
+                                                  id="add-env-intro"></textarea>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                    </button>
+                    <button type="button" class="btn btn-xs btn-xs btn-green" id="add-env-save">保 存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!--弹出窗口 添加私有namespace-->
+    <div class="modal fade" id="addnamespace" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="gridSystemModalLabel">添加NameSpace</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="form-horizontal">
+                            <div class="form-group ">
+                                <label for="add-ns-code" class="col-md-3 control-label">code：</label>
+                                <div class="col-md-8 ">
+                                    <input type="text" class="form-control input-lg duiqi" id="add-ns-code"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="add-ns-name" class="col-md-3 control-label">名称：</label>
+                                <div class="col-md-8 ">
+                                    <input type="text" class="form-control input-lg duiqi" id="add-ns-name"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="add-ns-intro" class="col-md-3 control-label">备注：</label>
+                                <div class="col-md-8 ">
+                                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                                              id="add-ns-intro"></textarea>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                    </button>
+                    <button type="button" class="btn btn-xs btn-xs btn-green" id="add-ns-save">保 存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!--弹出窗口 修改私有namespace-->
+    <div class="modal fade" id="update-namespace" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">修改Namespace</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="form-horizontal">
+                            <div class="form-group ">
+                                <label for="update-ns-code" class="col-md-3 control-label">code：</label>
+                                <div class="col-md-8 ">
+                                    <input type="hidden" id="update-ns-id">
+                                    <input type="text" class="form-control input-lg duiqi" id="update-ns-code"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="update-ns-name" class="col-md-3 control-label">名称：</label>
+                                <div class="col-md-8 ">
+                                    <input type="text" class="form-control input-lg duiqi" id="update-ns-name"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="update-ns-intro" class="col-md-3 control-label">备注：</label>
+                                <div class="col-md-8 ">
+                                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                                              id="update-ns-intro"></textarea>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                    </button>
+                    <button type="button" class="btn btn-xs btn-xs btn-green" id="update-ns-save">保 存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+    <!--弹出窗口 显示公共 namespace -->
+    <div class="modal fade" id="load-pub-namespace" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">公共NameSpace</h4>
+                </div>
+                <div class="modal-body" style="background-color: #d6dbdf">
+                    <div class="container-fluid pub-namespace-item-list" style="padding-right:0px;">
+                        <!--公共namespace下的item 列表-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown">
+                                <span data-id="" class="buttonText">导入到</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pri-namespace-list" role="menu">
+                                <!--某环境下namespace列表-->
+                            </ul>
+                        </div>
+                        <div class="btn-group btn-group-xs">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-green" id="insert-pub-item-to-pri">导入</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!--弹出窗口 显示其他环境下的 namespace -->
+    <div class="modal fade" id="load-env-namespace" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">从其他环境导入</h4>
+                </div>
+                <div class="modal-body" style="background-color: #d6dbdf">
+                    <div class="container-fluid env-namespace-item-list" style="padding-right:0px;">
+                        <!--某环境下namespace下的item 列表-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group dropup">
+                            <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown">
+                                <span data-id="" class="env-namespace">导入到</span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu env-namespace-list" role="menu">
+                                <!--某环境下namespace列表-->
+                            </ul>
+                        </div>
+                        <div class="btn-group btn-group-xs">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-green" id="insert-env-item-to-pri">导入</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+    <!--弹出窗口 添加item-->
+    <div class="modal fade" id="add-property" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">新增配置</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="form-horizontal">
+                            <div class="form-group ">
+                                <label for="item-property" class="col-md-3 control-label">property：</label>
+                                <div class="col-md-8 ">
+                                    <input type="hidden" id="ns-id" >
+                                    <input type="text" class="form-control input-lg duiqi" id="item-property"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-value" class="col-md-3 control-label">value：</label>
+                                <div class="col-md-8 ">
+                                                        <textarea class="form-control input-lg duiqi" rows="3"
+                                                                  id="item-value"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="item-intro" class="col-md-3 control-label">备注：</label>
+                                <div class="col-md-8">
+                                                        <textarea class="form-control input-lg duiqi" rows="3"
+                                                                  id="item-intro"></textarea>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                    </button>
+                    <button type="button" class="btn btn-xs btn-xs btn-green" id="item-save">保 存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+    <!--弹出窗口 修改item-->
+    <div class="modal fade" id="update-item" role="dialog" aria-labelledby="gridSystemModalLabel">
+        <div class="modal-dialog" role="document" style="width: 60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" >修改配置</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <form class="form-horizontal">
+                            <div class="form-group ">
+                                <label for="update-property-property" class="col-md-3 control-label">property：</label>
+                                <div class="col-md-8 ">
+                                    <input type="hidden"  id="update-property-id" >
+                                    <input type="text" class="form-control input-lg duiqi" id="update-property-property"
+                                           placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-property-value" class="col-md-3 control-label">value：</label>
+                                <div class="col-md-8 ">
+                                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                                              id="update-property-value"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="update-property-intro" class="col-md-3 control-label">备注：</label>
+                                <div class="col-md-8">
+                                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                                              id="update-property-intro"></textarea>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                    </button>
+                    <button type="button" class="btn btn-xs btn-xs btn-green " id="update-property-save">保 存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
+
+<!--弹出框结束-->
+<div th:replace="comm/footer::html"></div>
+</div>
+<script th:src="@{//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.js}"></script>
+<script th:src="@{/js/base.js}"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    function shows(selector,obj) {
+        $('.'+selector).attr("data-id",obj.name);
+        $('.'+selector).text($(obj).text());
+    }
+    var curApp; // 当前项目Code
+    var curEnv; // 当前环境
+    // 添加项目
+    var tale = new $.tale();
+    $('#add-app-save').click(function () {
+       var code = $('#add-app-code').val();
+       var name = $('#add-app-name').val();
+       var intro = $('#add-app-intro').val();
+
+       if(code == '' || name == ''){
+           tale.alertError("AppCode与APP名不能为空!");
+           return;
+       }
+        var data = {code:code,name: name, intro: intro};
+        tale.post({
+            url: '/app/add-app',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOkAndReload("添加成功");
+//                    $('#add-app-modal').modal('hide');
+                } else {
+                    tale.alertError(result.msg || '添加失败');
+                }
+            }
+        });
+
+    });
+
+    // 添加环境
+    $('#add-env-save').click(function () {
+        var name = $('#add-env-name').val();
+        var intro = $('#add-env-intro').val();
+
+        if(curApp == undefined || curApp == ''){
+            tale.alertError("请选择APP!");
+            return;
+        }
+
+        if(name == ''){
+            tale.alertError("环境名不能为空!");
+            return;
+        }
+        var data = {name: name, intro: intro,appCode:curApp};
+        tale.post({
+            url: '/env/add-env',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOkAndReload("添加成功");
+//                    $('#add-env-modal').modal('hide');
+                } else {
+                    tale.alertError(result.msg || '添加失败');
+                }
+            }
+        });
+
+    });
+
+    // 添加namespace
+    $('#add-ns-save').click(function () {
+        if(curEnv == undefined || curEnv == ''){
+            tale.alertError("请选择环境");
+            return;
+        }
+        var code = $('#add-ns-code').val();
+        var name = $('#add-ns-name').val();
+        var intro = $('#add-ns-intro').val();
+
+        if(code == '' || name == ''){
+            tale.alertError("请添加code和名称！")
+            return ;
+        }
+
+        var data = {code:code,name:name,intro:intro,envId:curEnv};
+        tale.post({
+            url:'/namespace/add-ns',
+            data:data,
+            success:function (result) {
+                if (result && result.success) {
+                    tale.alertOk("添加成功");
+                    $('#addnamespace').modal('hide');
+                    // 重新载入配置项数据
+                    loadAllProperties();
+                } else {
+                    tale.alertError(result.msg || '添加失败');
+                }
+            }
+        });
+    });
+
+    // 点击添加配置，向模态框传递namespaceid的值
+    // modal 载入触发事件
+    $('#add-property').on("show.bs.modal",function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        var nsid = btnThis.data('id');   //解析出data-id的内容
+        $('#ns-id').val(nsid);
+    });
+
+    // 添加item
+    $('body').on("click","#item-save",function () {
+        var nsId = $('#ns-id').val();
+        var property = $('#item-property').val();
+        var value = $('#item-value').val();
+        var intro = $('#item-intro').val();
+
+        if(curEnv == ''){
+            tale.alertError("请选择环境!");
+            return;
+        }
+
+        if(nsId == ''){
+            tale.alertError("未获取到Namsapce ID!");
+            return;
+        }
+
+        if(property =='' || value == ''){
+            tale.alertError("property或value 不能为空！");
+            return;
+        }
+
+        var data = {envId:curEnv,nsid:nsId,property:property,value:value,intro:intro};
+        tale.post({
+            url:'/item/add-item',
+            data:data,
+            success:function (result) {
+                if (result && result.success) {
+                    $('#add-property').modal('hide');
+                    tale.alertOk("添加成功!");
+                    loadAllProperties();
+                    $('#ns-id').val('');
+                    $('#item-property').val('');
+                    $('#item-value').val('');
+                    $('#item-intro').val('');
+                }else{
+                    tale.alertError(result.msg || "添加失败!");
+                }
+            }
+        });
+    });
+
+    // 载入公共namespace modal
+    $('#load-pub-namespace').on("show.bs.modal",function (event) {
+        loadNevNamespace(); // 载入下拉框
+        tale.post({
+            url:'/public/get-all-pubnamespace-whit-item',
+            data:null,
+            success:function (result) {
+                if(result && result.success){
+                    showPubResult(result.payload);
+                }else{
+                    tale.alertError(result.msg || "载入公共Namespace失败!");
+                }
+            }
+        });
+    });
+
+    // 公用namespace 中某环境下的namespace 下拉框
+    function loadNevNamespace(){
+        $(".pri-namespace-list").empty();
+        $(".env-namespace-list").empty();
+        if(curEnv == undefined || curEnv == ''){
+            tale.alertWarn("请先选择环境!");
+            return ;
+        }
+        var data = {envId:curEnv};
+        tale.post({
+            url:"/env/get-env-namespace",
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    $(".pri-namespace-list").append("<li><a href=\"#\" name='create' onclick=\"shows('buttonText',this)\">新建NS</a></li>");
+                    $(".env-namespace-list").append("<li><a href=\"#\" name='create' onclick=\"shows('env-namespace',this)\">新建NS</a></li>");
+                    for(i = 0; i < result.payload.length; i++){
+                        $(".pri-namespace-list").append("<li><a href=\"#\" name='"+result.payload[i].id+"' onclick=\"shows('buttonText',this)\">"+result.payload[i].name+"</a></li>");
+                        $(".env-namespace-list").append("<li><a href=\"#\" name='"+result.payload[i].id+"' onclick=\"shows('env-namespace',this)\">"+result.payload[i].name+"</a></li>");
+                    }
+
+                }else{
+                    tale.alertError("载入NameSpace列表失败!");
+                }
+
+            }
+        });
+
+    }
+
+    // 公用namespace 中modal 的全选/反选
+    $("body").on("click",".pub-item-check",function(){
+        var flag=this.checked;
+        $(this).closest('table').find(":checkbox[name='pub-item-checkbox']").prop('checked',flag); //
+    });
+
+
+
+
+    // 解析公共namespace 返回的数据
+    function showPubResult(result) {
+        $('.pub-namespace-item-list').empty();
+        var content = "";
+        for(i = 0; i < result.length; i++){
+            content += "<div class=\"row\" style=\"margin: 10px;background-color: #ffffff\">\n" +
+                "                            <div class=\"col-md-12\">\n" +
+                "                                <div class=\"row\" style=\"margin-top:0.5em;margin-left:0.5em;background-color: #ffffff;\">\n" +
+                "                                    <div class=\"col-md-2\">\n" +
+                "                                        <span class=\"primary pub-namespace-name\" style=\"font-size: 20px;\">"+result[i].name+"</span>\n" +
+                "                                    </div>\n" +
+                "                                    <table class=\"table table-hover table-striped\">\n" +
+                "                                        <thead>\n" +
+                "                                        <tr>\n" +
+                "                                            <th>id</th>\n" +
+                "                                            <th>property</th>\n" +
+                "                                            <th>value</th>\n" +
+                "                                            <th>备注</th>\n" +
+                "                                            <th>\n" +
+                "                                                <input type=\"checkbox\" class=\"pub-item-check\" />全选<br><br>\n" +
+                "                                            </th>\n" +
+                "                                        </tr>\n" +
+                "                                        </thead>\n" +
+                "                                        <tbody>\n";
+
+                for(j = 0; j < result[i].items.length; j++){
+                   content +=   "                                        <tr>\n" +
+                                "                                            <td class=\"property-id\">"+result[i].items[j].id+"</td>\n" +
+                                "                                            <td class=\"property-property\">"+result[i].items[j].property+"</td>\n" +
+                                "                                            <td class=\"property-value\">"+result[i].items[j].value+"</td>\n" +
+                                "                                            <td class=\"property-intro\">"+result[i].items[j].intro+"</td>\n" +
+                                "                                            <td><input type='hidden' value='"+result[i].id+":"+result[i].items[j].id+"'><input name=\"pub-item-checkbox\" type=\"checkbox\"></td>\n" +
+                                "                                        </tr>";
+                }
+      content +="                                        </tbody>\n" +
+                "                                    </table>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>";
+        }
+
+        $('.pub-namespace-item-list').append(content);
+    }
+
+
+    // 点击导入公共namespace 下的item
+    $("#insert-pub-item-to-pri").click(function () {
+        var id = $('.buttonText').attr("data-id");
+        if(id == ''){
+            tale.alertError("请选择导入位置!");
+            return;
+        }
+        var v = new Array();
+        $("input[name='pub-item-checkbox']").each(function(){
+            if($(this).prop("checked")==true){
+                v.push($(this).parent().find("input[type='hidden']").val());
+            }
+        });
+
+        // 添加到具体的 私有namespace
+        if(id != '' && id != 'create'){
+            var value = new Array();
+            for(i = 0;i < v.length;i++){
+                var n = v[i].split(":");
+                value.push(n[1]);
+            }
+            var data = {nsId:id,"pubItemId[]":value};
+            tale.post({
+                url:'/item/add-pub-item-to-pri',
+                data:data,
+                success:function (result) {
+                    if(result && result.success){
+                        $("#load-pub-namespace").modal('hide');
+                        tale.alertOk(result.payload || "导入成功!")
+                        loadAllProperties();
+
+                        // 置空
+                $('.buttonText').attr("data-id","");
+                        $('.buttonText').text("导入到");
+                    }else{
+                        tale.alertError(result.msg ||"导入失败");
+                    }
+                }
+            });
+        }
+        // 创建namespace 再导入item
+        if(id == 'create'){
+            if(curEnv == undefined || curEnv == ''){
+                tale.alertError("请选择环境!");
+                return;
+            }
+            var va = {"envId": curEnv};
+
+            var ar = [];
+            for(i = 0;i < v.length;i++) {
+                var s = {};
+                var n = v[i].split(":");
+                var a = n[0];
+                var b = n[1];
+                s[a]=parseInt(b);
+                ar.push(s);
+            }
+            v = ar;
+            var uniqueObj = {};
+            for(var i = 0; i < v.length; i++) {
+                var obj = v[i];
+
+                var properties = Object.keys(v[i]).join('');
+                var values = Object.values(v[i]);
+
+                if(!uniqueObj[properties]) {
+                    uniqueObj[properties] = []
+                }
+
+                uniqueObj[properties] = uniqueObj[properties].concat(values);
+            }
+
+
+
+            var ns = [];
+            for(var item in uniqueObj) {
+                ns.push({ id: item, item: uniqueObj[item] })
+            }
+
+            va.ns = ns;
+            console.log(JSON.stringify(va))
+            var data = va;
+            $.ajax({
+                type : "POST",
+                url:'/item/add-pub-namesapce-item-pri',
+                data : JSON.stringify(data),
+                contentType : "application/json",
+                dataType : "json",
+                success:function(result) {
+                    if(result && result.success){
+                        $("#load-pub-namespace").modal('hide');
+                        tale.alertOk(result.payload || "导入成功!")
+                        loadAllProperties();
+                    }else{
+                        tale.alertError(result.msg ||"导入失败");
+                    }
+                }
+            });
+        }
+    });
+
+    // 载入所有的App下拉列表
+    function loadAllApp(){
+        tale.post({
+            url: '/app/get-all-app',
+            data: null,
+            success: function (result) {
+                if (result && result.success) {
+                    $(".all-app-select").empty();
+                    for (i = 0; i < result.payload.length; i++) {
+                        $(".all-app-select").append("<option value='"+result.payload[i].code+"'>"+result.payload[i].code+"</option>");
+                    }
+
+                } else {
+                    tale.alertError(result.msg || '获取下拉列表失败');
+                }
+            }
+        });
+    }
+    // 载入某个App下的所有环境
+    function loadAllEnv(){
+        var data = {appCode:curApp};
+        tale.post({
+            url:'/env/get-app-env',
+            data:data,
+            success: function (result) {
+                if(result && result.success){
+                    $(".list-app-env").empty();
+                    $(".load-env-select").empty();
+                    for (i = 0; i < result.payload.length; i++) {
+                        $(".load-env-select").append("<li><a  href=\"javascript:void(0)\" name='"+result.payload[i].id+"' class='app-load-env'  onclick=\"showEnvItem('load-btn-text',this)\" >" +result.payload[i].name+"</a>");
+                        $(".list-app-env").append("<li><a  href=\"javascript:void(0)\" envId='"+result.payload[i].id+"' class='app-env'>" +result.payload[i].name+"</a>");
+                    }
+                } else {
+                    tale.alertError(result.msg || '获取环境列表失败');
+                }
+            }
+        })
+    }
+     // 载入某个环境下的所有配置项
+    function loadAllProperties(){
+        if(curEnv == undefined || curEnv == ''){
+            return;
+        }
+        var data = {envId:curEnv};
+        tale.post({
+            url:'/env/get-env-item',
+            data:data,
+            success:function (result) {
+                if(result && result.success) {
+                    showResult(result.payload);
+                }else {
+                    tale.alertError(result.msg || "获取配置项失败")
+                }
+            }
+        });
+    }
+
+    // 解析私有namespace 返回的数据
+    function showResult(result) {
+        $('.namespace-list').empty();
+
+        var content = "";
+        for(i = 0 ; i < result.nameSpaces.length;i++){
+            content +=  "<div class=\"col-md-12\" style=\"margin-top:0.5em;margin-left:0.5em;background-color: #ffffff;\">\n"
+            content +=  "   <div class=\"col-md-3 \">\n" +
+                        "       <span class=\"primary pub-namespace-name\" style=\"font-size: 20px;\">"+result.nameSpaces[i].spaceCode + " / " + result.nameSpaces[i].name+"</span>\n" +
+                        "   </div>\n" +
+                        "   <div class=\"col-md-2 col-md-offset-7\">\n" +
+                        "       <button class=\"btn btn-green btn-xs \" data-id = '"+result.nameSpaces[i].id+"'  data-toggle=\"modal\"  data-target=\"#add-property\">+添加配置\n" +
+                        "       </button>\n" +
+                        "       <button class=\"btn btn-warning btn-xs\" data-id = '"+result.nameSpaces[i].id+"'  data-toggle=\"modal\" data-target=\"#update-namespace\">修改NS\n" +
+                        "           </button>\n"+
+                        "       <button class=\"btn btn-danger btn-xs delete-namespace\" data-id = '"+result.nameSpaces[i].id+"' >-删除NS\n" +
+                        "        </button>\n"+
+                        "   </div>\n" +
+                        "   <table class=\"table table-hover table-striped\">\n" +
+                        "    <thead>\n" +
+                        "      <tr>\n" +
+                        "       <th>id</th>\n" +
+                        "       <th>property</th>\n" +
+                        "       <th>value</th>\n" +
+                        "       <th>备注</th>\n" +
+                        "       <th>最后修改人</th>\n" +
+                        "       <th>修改时间</th>\n" +
+                        "       <th>修改</th>\n" +
+                        "       <th>删除</th>\n" +
+                        "      </tr>\n" +
+                        "     </thead>\n" +
+                        "    <tbody>\n"
+                for(j = 0; j < result.nameSpaces[i].items.length; j++ ){
+                            content += "<tr>\n" +
+                                        " <td class='pri-property-id'>"+result.nameSpaces[i].items[j].id+"</td>\n" +
+                                        " <td class='pri-property-property'>"+result.nameSpaces[i].items[j].property+"</td>\n" +
+                                        " <td class='pri-property-value'>"+result.nameSpaces[i].items[j].value+"</td>\n" +
+                                        " <td class='pri-property-intro'>"+result.nameSpaces[i].items[j].intro+"</td>\n" +
+                                        " <td>"+result.nameSpaces[i].items[j].updateBy+"</td>\n" +
+                                        " <td>"+result.nameSpaces[i].items[j].updateTime+"</td>\n" +
+                                        " <td><button type=\"button\" class=\"btn btn-warning btn-xs property-update\" data-toggle=\"modal\" data-target=\"#update-item\">修改</button></td>\n" +
+                                        " <td><button type=\"button\" class=\"btn btn-danger btn-xs property-delete\">删除</button></td>\n" +
+                                    "</tr>"
+                }
+                content += "</tbody>";
+                content += "</table>";
+            content += "</div>";
+        }
+        $('.namespace-list').append(content);
+    }
+
+    // 获取某环境下所有的配置项
+    $(".list-app-env").on("click",".app-env",function () {
+        $(this).parent().siblings('li').removeClass('active');
+        $(this).parent().addClass('active');
+        curEnv = $(this).attr('envId');
+        // 载入配置项
+        loadAllProperties();
+
+    });
+
+    // 点击item 修改,数据传递
+    // 修改配置项-显示弹出框
+    //$('父标签选择器').on("click","需要触发事件的选择器",function () {}
+    $('.namespace-list').on("click",".property-update",function () {
+        $('#update-property-id').val('');
+        $('#update-property-property').val('');
+        $('#update-property-value').val('');
+        $('#update-property-intro').val('');
+
+        var tr = $(this).closest('tr');
+        $('#update-property-id').val($.trim(tr.find(".pri-property-id").text()));
+        $('#update-property-value').val($.trim(tr.find(".pri-property-value").text()));
+        $('#update-property-property').val($.trim(tr.find(".pri-property-property").text()));
+        $('#update-property-intro').val($.trim(tr.find(".pri-property-intro").text()));
+    });
+
+    // 更新配置项
+    $('#update-property-save').click(function () {
+
+        var id = $('#update-property-id').val();
+        var property = $('#update-property-property').val();
+        var value = $('#update-property-value').val();
+        var intro = $('#update-property-intro').val();
+
+        if(curEnv == undefined || curEnv == ''){
+            tale.alertError("请选择环境!");
+            return;
+        }
+        if (property == '' || value == '') {
+            tale.alertError('property与value不能为空');
+            return;
+        }
+
+        var data = {envId:curEnv,id:id,property: property, value: value, intro: intro};
+        tale.post({
+            url: '/item/update-item',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOk("更新成功");
+                    loadAllProperties();
+                    $('#update-item').modal('hide');
+                } else {
+                    tale.alertError(result.msg || '更新失败');
+                }
+            }
+        });
+    });
+
+    // 修改NS 初始化弹出框
+    $("#update-namespace").on("show.bs.modal",function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var nsid = btnThis.data('id');   //解析出data-id的内容
+        var data = {id:nsid};
+        tale.post({
+            url:'/namespace/get-namespace-by-id',
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    $("#update-ns-id").val(result.payload.id);
+                    $("#update-ns-code").val(result.payload.spaceCode);
+                    $("#update-ns-name").val(result.payload.name);
+                    $("#update-ns-intro").val(result.payload.intro);
+                }else{
+                    tale.alertError(result.msg || "获取Namspace失败!");
+                }
+            }
+        });
+    });
+
+    $('body').on("click","#update-ns-save",function () {
+        var id = $.trim($("#update-ns-id").val());
+        var code = $.trim($("#update-ns-code").val());
+        var name = $.trim($("#update-ns-name").val());
+        var intro = $.trim($("#update-ns-intro").val());
+
+        if(curEnv == undefined || curEnv == ''){
+            tale.alertError("请选择环境!");
+            return;
+        }
+
+        if(code == ''|| name == ''){
+            tale.alertError("code和名称不能为空");
+            return;
+        }
+        var data = {id:id,code:code,name:name,intro:intro,envId:curEnv};
+        tale.post({
+            url:'/namespace/update-namespace',
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    $("#update-namespace").modal("hide");
+                    tale.alertOk("更新成功!");
+                    loadAllProperties();
+                }else {
+                    tale.alertError(result.msg || "更新Namespace失败!");
+                }
+            }
+        });
+
+    });
+
+    // 删除namespace
+    $('.namespace-list').on("click",".delete-namespace",function(){
+        var nsId = $(this).attr("data-id");
+
+        tale.alertConfirm({
+            title: '确定删除该项吗?',
+            then: function () {
+                tale.post({
+                    url: '/namespace/delete-namespace',
+                    data: {id: nsId},
+                    success: function (result) {
+                        if (result && result.success) {
+                            tale.alertOk('删除成功');
+                            loadAllProperties();
+                        } else {
+                            tale.alertError(result.msg || '删除失败');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    // 删除某个配置项
+    $('.namespace-list').on("click",".property-delete",function(){
+        var id = $(this).closest('tr').find(".pri-property-id").text();
+        tale.alertConfirm({
+            title: '确定删除该项吗?',
+            then: function () {
+                tale.post({
+                    url: '/item/delete-item',
+                    data: {id: id},
+                    success: function (result) {
+                        if (result && result.success) {
+                            tale.alertOk('删除成功');
+                            loadAllProperties();
+                        } else {
+                            tale.alertError(result.msg || '删除失败');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    /////////////////////////////载入当前项目下其他环境的配置//////////////////////////////////////////////////////
+
+    // 点击从其他环境导入时, 显示弹出框
+    function showEnvItem(selector,obj) {
+        var envId = obj.name;
+        $('.'+selector).attr("data-id",envId);
+        $('.'+selector).text($(obj).text());
+
+
+        loadNevNamespace(); // 载入弹出框下拉框
+        var data = {envId:envId};
+        tale.post({
+            url:'/env/get-env-item',
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    showEnvItemResult(result.payload.nameSpaces);
+                }else{
+                    tale.alertError(result.msg || "载入公共Namespace失败!");
+                }
+            }
+        });
+
+
+        $('#load-env-namespace').modal('show');
+    }
+    // 解析某个环境下的namespace和item数据
+    function showEnvItemResult(result) {
+        $('.env-namespace-item-list').empty();
+        var content = "";
+        for(i = 0; i < result.length; i++){
+            content += "<div class=\"row\" style=\"margin: 10px;background-color: #ffffff\">\n" +
+                "                            <div class=\"col-md-12\">\n" +
+                "                                <div class=\"row\" style=\"margin-top:0.5em;margin-left:0.5em;background-color: #ffffff;\">\n" +
+                "                                    <div class=\"col-md-3\">\n" +
+                "                                        <span class=\"primary env-namespace-name\" style=\"font-size: 20px;\">"+result[i].spaceCode + " / " + result[i].name+"</span>\n" +
+                "                                    </div>\n" +
+                "                                    <table class=\"table table-hover table-striped\">\n" +
+                "                                        <thead>\n" +
+                "                                        <tr>\n" +
+                "                                            <th>id</th>\n" +
+                "                                            <th>property</th>\n" +
+                "                                            <th>value</th>\n" +
+                "                                            <th>备注</th>\n" +
+                "                                            <th>\n" +
+                "                                                <input type=\"checkbox\" class=\"env-item-check\" />全选<br><br>\n" +
+                "                                            </th>\n" +
+                "                                        </tr>\n" +
+                "                                        </thead>\n" +
+                "                                        <tbody>\n";
+
+            for(j = 0; j < result[i].items.length; j++){
+                content +=   "                                        <tr>\n" +
+                    "                                            <td class=\"property-id\">"+result[i].items[j].id+"</td>\n" +
+                    "                                            <td class=\"property-property\">"+result[i].items[j].property+"</td>\n" +
+                    "                                            <td class=\"property-value\">"+result[i].items[j].value+"</td>\n" +
+                    "                                            <td class=\"property-intro\">"+result[i].items[j].intro+"</td>\n" +
+                    "                                            <td><input type='hidden' value='"+result[i].id+":"+result[i].items[j].id+"'><input name=\"env-item-checkbox\" type=\"checkbox\"></td>\n" +
+                    "                                        </tr>";
+            }
+            content +="                                        </tbody>\n" +
+                "                                    </table>\n" +
+                "                                </div>\n" +
+                "                            </div>\n" +
+                "                        </div>";
+        }
+
+        $('.env-namespace-item-list').append(content);
+    };
+
+    // 公用namespace 中modal 的全选/反选
+    $("body").on("click",".env-item-check",function(){
+        var flag=this.checked;
+        $(this).closest('table').find(":checkbox[name='env-item-checkbox']").prop('checked',flag); //
+    });
+
+    // 点击导入公共namespace 下的item
+    $("#insert-env-item-to-pri").click(function () {
+        var id = $('.env-namespace').attr("data-id");
+        if(id == ''){
+            tale.alertError("请选择导入位置!");
+            return;
+        }
+        var v = new Array();
+        $("input[name='env-item-checkbox']").each(function(){
+            if($(this).prop("checked")==true){
+                v.push($(this).parent().find("input[type='hidden']").val());
+            }
+        });
+
+        // 添加到具体的 私有namespace
+        if(id != '' && id != 'create'){
+            var value = new Array();
+            for(i = 0;i < v.length;i++){
+                var n = v[i].split(":");
+                value.push(n[1]);
+            }
+            var data = {nsId:id,"itemId[]":value};
+            tale.post({
+                url:'/item/add-env-item-to-pri',
+                data:data,
+                success:function (result) {
+                    if(result && result.success){
+                        $("#load-pub-namespace").modal('hide');
+                        tale.alertOk(result.payload || "导入成功!")
+                        loadAllProperties();
+                        $('#load-env-namespace').modal('hide');
+                        // 置空
+                        $('.env-namespace').attr("data-id","");
+                        $('.env-namespace').text("导入到");
+                    }else{
+                        tale.alertError(result.msg ||"导入失败");
+                    }
+                }
+            });
+        }
+        // 创建namespace 再导入item
+        if(id == 'create'){
+            if(curEnv == undefined || curEnv == ''){
+                tale.alertError("请选择环境!");
+                return;
+            }
+            var va = {"envId": curEnv};
+
+            var ar = [];
+            for(i = 0;i < v.length;i++) {
+                var s = {};
+                var n = v[i].split(":");
+                var a = n[0];
+                var b = n[1];
+                s[a]=parseInt(b);
+                ar.push(s);
+            }
+            v = ar;
+            var uniqueObj = {};
+            for(var i = 0; i < v.length; i++) {
+                var obj = v[i];
+
+                var properties = Object.keys(v[i]).join('');
+                var values = Object.values(v[i]);
+
+                if(!uniqueObj[properties]) {
+                    uniqueObj[properties] = []
+                }
+
+                uniqueObj[properties] = uniqueObj[properties].concat(values);
+            }
+
+
+
+            var ns = [];
+            for(var item in uniqueObj) {
+                ns.push({ id: item, item: uniqueObj[item] })
+            }
+
+            va.ns = ns;
+            console.log(JSON.stringify(va))
+            var data = va;
+            $.ajax({
+                type : "POST",
+                url:'/item/add-env-namesapce-item-pri',
+                data : JSON.stringify(data),
+                contentType : "application/json",
+                dataType : "json",
+                success:function(result) {
+                    if(result && result.success){
+                        $("#load-pub-namespace").modal('hide');
+                        tale.alertOk(result.payload || "导入成功!")
+                        loadAllProperties();
+                        $('#load-env-namespace').modal('hide');
+                    }else{
+                        tale.alertError(result.msg ||"导入失败");
+                    }
+                }
+            });
+        }
+    });
+
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    $(function () {
+        loadAllApp();
+
+        $('.all-app-select').change(function(){
+            curApp = $(this).val();
+            curEnv = undefined;
+            $('.namespace-list').empty(); // 切换项目时 清空所有配置项
+            loadAllEnv();
+        });
+
+        $(".container-fluid").on("change",".load-env-select",function(){
+            $(this).val();
+        });
+    })
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='公共配置列表',active='index',group='common'">
+<body>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}" id="logo">参数配置中心
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{/logout}">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="comm/header::html"></div>
+        <!-- 右侧具体内容栏目 -->
+        <div class="col-md-11">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="btn-group">
+                        <ul class="nav">
+                            <li class="dropdown" id="accountmenu">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">公共NS<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-1 col-md-offset-8">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-yellow btn-xs" data-toggle="modal" data-target="#addgroup">
+                            添加NS
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="margin-top: 10px;background-color: #ffffff">
+
+                <div class="col-md-12">
+                    <div class="row" style="padding-top: 15px;">
+                        <div class="col-md-3">
+                            <span class="primary pub-namespace-name" style="font-size: 20px;">
+                                <!--namespace code/name-->
+                            </span>
+                        </div>
+                        <div class="col-md-2 col-md-offset-7">
+                            <button class="btn btn-green btn-xs" data-toggle="modal" data-target="#addSource">添加配置
+                            </button>
+                            <button class="btn btn-warning btn-xs" data-toggle="modal" data-target="#updateGroup">修改NS
+                            </button>
+                            <button class="btn btn-danger btn-xs delete-pub-namespace">删除NS
+                            </button>
+                        </div>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>property</th>
+                                <th>value</th>
+                                <th>备注</th>
+                                <th>最后修改人</th>
+                                <th>修改时间</th>
+                                <th>修改</th>
+                                <th>删除</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <!--弹出框开始-->
+                <!--弹出窗口 添加公共namespace-->
+                <div class="modal fade" id="addgroup" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">添加公共资源组</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="groupcode" class="col-md-3 control-label">code：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="groupcode"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="groupName" class="col-md-3 control-label">名称：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="groupName"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="groupIntro" class="col-md-3 control-label">备注：</label>
+                                            <div class="col-md-8 ">
+                                                <textarea class="form-control input-lg duiqi" rows="3"
+                                                          id="groupIntro"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="groupSave">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+                <!--弹出窗口 修改公共namespace-->
+                <div class="modal fade" id="updateGroup" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">修改Namespace</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="update-group-code" class="col-md-3 control-label">code：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="hidden" id="update-group-id">
+                                                <input type="text" class="form-control input-lg duiqi" id="update-group-code"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="update-group-name" class="col-md-3 control-label">名称：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="update-group-name"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="update-group-intro" class="col-md-3 control-label">备注：</label>
+                                            <div class="col-md-8 ">
+                                                <textarea class="form-control input-lg duiqi" rows="3"
+                                                          id="update-group-intro"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="update-group-save">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+
+                <!--弹出窗口 添加资源项-->
+                <div class="modal fade" id="addSource" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="">新增配置</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="propertyproperty" class="col-md-3 control-label">property：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="propertyproperty"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="propertyvalue" class="col-md-3 control-label">value：</label>
+                                            <div class="col-md-8 ">
+                                                <textarea class="form-control input-lg duiqi" rows="3"
+                                                          id="propertyvalue"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="propertyIntro" class="col-md-3 control-label">备注：</label>
+                                            <div class="col-md-8">
+                                                <textarea class="form-control input-lg duiqi" rows="3"
+                                                          id="propertyIntro"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="propertysave">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+                <!--弹出窗口 修改资源项-->
+                <div class="modal fade" id="updateProperty" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" >修改配置</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="update-property-property" class="col-md-3 control-label">property：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="hidden"  id="update-property-id" >
+                                                <input type="text" class="form-control input-lg duiqi" id="update-property-property"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="update-property-value" class="col-md-3 control-label">value：</label>
+                                            <div class="col-md-8 ">
+                                                <textarea class="form-control input-lg duiqi" rows="3"
+                                                          id="update-property-value"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="update-property-intro" class="col-md-3 control-label">备注：</label>
+                                            <div class="col-md-8">
+                                                <textarea class="form-control input-lg duiqi" rows="3"
+                                                          id="update-property-intro"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green " id="update-property-save">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+                <!--弹出框结束-->
+            </div>
+
+        </div>
+    </div>
+
+    <div th:replace="comm/footer::html"></div>
+</div>
+<script th:src="@{//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.js}"></script>
+<script th:src="@{/js/base.js}"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+
+    var curPubNameSpaceId;
+    var curPubNameSpaceName;
+    var curPubNameSpaceCode;
+    var tale = new $.tale();
+
+    // 修改配置项-显示弹出框
+    //$('父标签选择器').on("click","需要触发事件的选择器",function () {}
+    $('tbody').on("click",".property-update",function () {
+        $('#update-property-id').val('');
+        $('#update-property-property').val('');
+        $('#update-property-value').val('');
+        $('#update-property-intro').val('');
+
+        var tr = $(this).closest('tr');
+        $('#update-property-id').val($.trim(tr.find(".property-id").text()));
+        $('#update-property-value').val($.trim(tr.find(".property-value").text()));
+        $('#update-property-property').val($.trim(tr.find(".property-property").text()));
+        $('#update-property-intro').val($.trim(tr.find(".property-intro").text()));
+    });
+
+    // 初始化更新Namespace 弹出框
+    $("#updateGroup").on("show.bs.modal",function (event) {
+        var data = {id:curPubNameSpaceId};
+        tale.post({
+            url:'/public/get-pub-namespace-by-id',
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    $("#update-group-id").val(result.payload.id);
+                    $("#update-group-code").val(result.payload.spaceCode);
+                    $("#update-group-name").val(result.payload.name);
+                    $("#update-group-intro").val(result.payload.intro);
+                }else {
+                    tale.alertError(result.msg || "获取Namespace失败!");
+                }
+            }
+        });
+    });
+
+    $("#update-group-save").click(function () {
+        var id = $('#update-group-id').val();
+        var code = $('#update-group-code').val();
+        var name = $('#update-group-name').val();
+        var intro = $('#update-group-intro').val();
+
+        if(code == '' || name == ''){
+            tale.alertError("code和名称不能为空!");
+            return;
+        }
+
+        var data = {id:id,code:code,name:name,intro:intro};
+        tale.post({
+            url:'/public/update-pub-namespace',
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    tale.alertOkAndReload("更新成功!");
+                }else {
+                    tale.alertError(result.msg || "更新失败!")
+                }
+            }
+        });
+
+    });
+    // 更新配置项
+    $('#update-property-save').click(function () {
+
+        var id = $('#update-property-id').val();
+        var property = $('#update-property-property').val();
+        var value = $('#update-property-value').val();
+        var intro = $('#update-property-intro').val();
+
+        if (property == '' || value == '') {
+            tale.alertError('property与value不能为空');
+            return;
+        }
+
+        var data = {id:id,property: property, value: value, intro: intro};
+        tale.post({
+            url: '/public/update-pub-item',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOk("更新成功");
+                    getProperties(curPubNameSpaceId,curPubNameSpaceName,curPubNameSpaceCode);
+                    $('#updateProperty').modal('hide');
+                } else {
+                    tale.alertError(result.msg || '更新失败');
+                }
+            }
+        });
+    });
+
+    // 删除某个配置项
+    $('tbody').on("click",".property-delete",function(){
+        var id = $(this).closest('tr').find(".property-id").text();
+        tale.alertConfirm({
+            title: '确定删除该项吗?',
+            text:'namespace下的配置项都将被删除!',
+            then: function () {
+                tale.post({
+                    url: '/public/delete-pub-item',
+                    data: {id: id},
+                    success: function (result) {
+                        if (result && result.success) {
+                            tale.alertOk('删除成功');
+                            getProperties(curPubNameSpaceId,curPubNameSpaceName,curPubNameSpaceCode);
+                        } else {
+                            tale.alertError(result.msg || '删除失败');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    // 删除namespace
+    $(".delete-pub-namespace").click(function () {
+        if (curPubNameSpaceId == undefined) {
+            tale.alertError('未获取到NameSpaceID!');
+            return;
+        }
+
+        tale.alertConfirm({
+            title: '确定删除该项吗?',
+            then: function () {
+                tale.post({
+                    url: '/public/delete-pub-namespace',
+                    data: {id: curPubNameSpaceId},
+                    success: function (result) {
+                        if (result && result.success) {
+                            tale.alertOkAndReload('删除成功');
+                        } else {
+                            tale.alertError(result.msg || '删除失败');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    // 添加配置分组
+    $('#groupSave').click(function () {
+        var code = $('#groupcode').val();
+        var name = $('#groupName').val();
+        var intro = $('#groupIntro').val();
+
+        if (code == '' || name == '') {
+            tale.alertError('code与名称不能为空');
+            return;
+        }
+
+        var data = {code: code.trim(), name: name.trim(), intro: intro.trim()};
+        tale.post({
+            url: '/public/save-pub-namespace',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOk("添加成功");
+                    loadNamespace();
+                    $('#addgroup').modal('hide');
+                } else {
+                    tale.alertError(result.msg || '登录失败');
+                }
+            }
+        });
+    });
+
+    // 添加公共namespace下的配置项
+    $('#propertysave').click(function () {
+        if (curPubNameSpaceId == undefined) {
+            tale.alertError('请选择公共NameSpace!');
+            return;
+        }
+        var property = $('#propertyproperty').val();
+        var value = $('#propertyvalue').val();
+        var intro = $('#propertyIntro').val();
+
+        if (property == '' || value == '') {
+            tale.alertError('property与value不能为空');
+            return;
+        }
+
+        var data = {property: property, value: value, intro: intro,namespaceId:curPubNameSpaceId};
+        tale.post({
+            url: '/public/save-pub-item',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOk("添加成功");
+                    getProperties(curPubNameSpaceId,curPubNameSpaceName,curPubNameSpaceCode);
+                    $('#addSource').modal('hide');
+                } else {
+                    tale.alertError(result.msg || '添加失败');
+                }
+            }
+        });
+    });
+
+    // 通过 id 获取某个 namespace 下的所有配置
+    function getProperties(id,name,code) {
+        if(id == undefined){
+            return;
+        }
+        curPubNameSpaceId = id;
+        curPubNameSpaceName = name;
+        curPubNameSpaceCode = code
+        $('.pub-namespace-name').text(curPubNameSpaceCode +" / " +curPubNameSpaceName);
+
+        var data = {id: id};
+        tale.post({
+            url: '/public/get-pub-namespace-properties',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    $('tbody').empty();
+                    for (i = 0; i < result.payload.length; i++) {
+                        $('tbody').append(
+                            " <tr>\n" +
+                            " <td class='property-id'>" + result.payload[i].id + "</td>\n" +
+                            " <td class='property-property'>" + result.payload[i].property + "</td>\n" +
+                            " <td class='property-value'>" + result.payload[i].value + "</td>\n" +
+                            " <td class='property-intro'>" + result.payload[i].intro + "</td>\n" +
+                            " <td>" + result.payload[i].updateBy + "</td>\n" +
+                            " <td>" + result.payload[i].updateTime + "</td>\n" +
+                            " <td><button type=\"button\" class=\"btn btn-warning btn-xs property-update\" data-toggle=\"modal\" data-target=\"#updateProperty\">修改</button></td>\n" +
+                            " <td><button type=\"button\" class=\"btn btn-danger btn-xs property-delete\">删除</button></td>\n" +
+                            " </tr>"
+                        );
+                    }
+                } else {
+                    tale.alertError(result.msg || '获取配置失败');
+                }
+            }
+        });
+    }
+
+    // 载入公共 namespace 下拉列表
+    function loadNamespace(){
+        var arr = new Array(undefined,undefined,undefined);
+        tale.post({
+            url: '/public/get-all-pub-namespace',
+            data: null,
+            success: function (result) {
+                if (result && result.success) {
+                    $(".dropdown-menu").empty();
+                    for (i = 0; i < result.payload.length; i++) {
+                        $(".dropdown-menu").append("<li><a href=\"javascript:void(0)\" onclick=\"getProperties(" + result.payload[i].id +",'"+result.payload[i].name + "','"+result.payload[i].spaceCode + "')\">" + result.payload[i].name + "</a></li>");
+                        arr[0] = result.payload[i].id;
+                        arr[1] = result.payload[i].name;
+                        arr[2] = result.payload[i].spaceCode;
+                    }
+
+                } else {
+                    tale.alertError(result.msg || '获取下拉列表失败');
+                }
+            }
+        });
+        return arr;
+    }
+
+
+    // 获取配置分组下拉列表
+    $(function () {
+       var result = loadNamespace(); // 获取下来列表中最后一个namespace,用来在页面载入时,显示一个namespace的配置项
+        curPubNameSpaceId = result[0];
+        curPubNameSpaceName = result[1];
+        curPubNameSpaceCode = result[2];
+        getProperties(curPubNameSpaceId,curPubNameSpaceName,curPubNameSpaceCode);
+    })
+    /*]]>*/
+
+</script>
+</body>
+
+</html>

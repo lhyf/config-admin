@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <script src="/js/public/jquery.min.js"></script>
+    <script src="/js/public/bootstrap.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="js/public/html5shiv.min.js"></script>
+    <script src="js/public/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"/>
+    <link th:href="@{//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.css}" rel="stylesheet"/>
+
+    <style>
+        body {
+            background: url("/images/bg/1.png");
+            no-repeat;
+            background-size: cover;
+        }
+
+        .form {
+            background: rgba(255, 255, 255, 0.2);
+            width: 400px;
+            margin: 120px auto;
+        }
+
+        /*阴影*/
+        .fa {
+            display: inline-block;
+            top: 27px;
+            left: 6px;
+            position: relative;
+            color: #ccc;
+        }
+
+        input[type="text"], input[type="password"] {
+            padding-left: 26px;
+        }
+
+        .checkbox {
+            padding-left: 21px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="form row">
+        <div class="form-horizontal col-md-offset-3" id="login_form">
+            <h3 class="form-title">后台登录</h3>
+            <div class="col-md-9">
+                <form class="form-horizontal m-t-20" method="post" id="loginForm" onsubmit="return checkForm()">
+                    <div class="form-group">
+                        <i class="fa fa-user fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="用户名" id="username" required=""
+                               name="username" autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock fa-lg"></i>
+                        <input class="form-control required" type="password" placeholder="密码" id="password" required=""
+                               name="password" maxlength="16"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="remember" value="1"/>记住我
+                        </label>
+                    </div>
+                    <div class="form-group col-md-offset-9">
+                        <button type="submit" class="btn btn-danger btn-lg btn-rounded btn-block w-lg waves-effect waves-light" name="submit">登&nbsp;录</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.js}"></script>
+<script th:src="@{/js/base.js}"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var tale = new $.tale();
+    function checkForm() {
+        tale.post({
+            url: '/login',
+            data: $("#loginForm").serialize(),
+            success: function (result) {
+                if (result && result.success) {
+                    window.location.href = '/index';
+                } else {
+                    tale.alertError(result.msg || '登录失败');
+                }
+            }
+        });
+        return false;
+    }
+    /*]]>*/
+
+</script>
+
+</body>
+</html>

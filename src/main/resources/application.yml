@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: utf-8
+    servlet:
+      content-type: text/html
+    mode: HTML
+    cache: false
+  servlet: # multipart 文件上传大小
+    multipart:
+      max-file-size: 10MB
+  jackson: # 返回时间格式化
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+
+
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+#pagehelper分页插件
+pagehelper:
+    helperDialect: postgresql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+#mapper:
+#    mappers: com.cnacademy.utils.MyMapper
+#    not-empty: false
+#    identity: jdbc
+#mapper
+
+

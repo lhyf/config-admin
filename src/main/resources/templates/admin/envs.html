@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='环境列表',active='env',group='app'">
+<body>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}" id="logo">参数配置中心
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{/logout}">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="comm/header::html"></div>
+        <!-- 右侧具体内容栏目 -->
+        <div class="col-md-11">
+            <div class="row">
+
+                <div class="col-md-2">
+                    <div class="text-info">
+                        <h6>系统环境管理</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;background-color: #ffffff">
+                <div class="col-md-12">
+                    <div class="row" style="padding-top: 15px;">
+                        <div class="col-md-1 col-md-offset-10">
+                            <select class="selectpicker all-app-select" data-th-title="请选APP" data-style="btn-info">
+                                <option >全部</option>
+                                <!--项目列表-->
+                            </select>
+                        </div>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th class="text-center">环境名</th>
+                                <th class="text-center">AppCode</th>
+                                <th class="text-center">更新时间</th>
+                                <th class="text-center">修改人</th>
+                                <th class="text-center">备注</th>
+                                <th class="text-center">修改</th>
+                                <th class="text-center">删除</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--<tr class="text-center" th:each="env,envStat : ${envs.list}">-->
+                                <!--<td class="env-name" th:text="${env.name}"></td>-->
+                                <!--<td class="env-appcode" th:text="${env.appCode}"></td>-->
+                                <!--<td th:text="${#dates.format(env.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
+                                <!--<td th:text="${env.updateBy}"></td>-->
+                                <!--<td class="env-intro" th:text="${env.intro}"></td>-->
+                                <!--<td>-->
+                                    <!--<button type="button" th:data-id="${env.id}"-->
+                                            <!--class="btn btn-info btn-xs env-update" data-toggle="modal"-->
+                                            <!--data-target="#update-env">修改-->
+                                    <!--</button>-->
+                                <!--</td>-->
+                                <!--<td>-->
+                                    <!--<button type="button" th:data-id="${env.id}"-->
+                                            <!--class="btn btn-danger btn-xs env-delete">删除-->
+                                    <!--</button>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <!--弹出框开始-->
+                <!--弹出窗口 修改环境-->
+                <div class="modal fade" id="update-env" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" >更新环境</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="update-env-appcode" class="col-md-3 control-label">AppCode：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="hidden" id="update-env-id" >
+                                                <input type="text" style="color: #0f0f0f" class="form-control input-lg duiqi" id="update-env-appcode" readonly
+                                                       placeholder="请勿使用中文输入">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="update-env-name" class="col-md-3 control-label">环境名：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="update-env-name"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="update-env-intro" class="col-md-3 control-label">备注：</label>
+                                            <div class="col-md-8">
+                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                              id="update-env-intro"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="update-env-save">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+                <!--弹出框结束-->
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="comm/footer::html"></div>
+</div>
+<script th:src="@{//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.js}"></script>
+<script th:src="@{/js/base.js}"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+
+    // 添加项目
+    var tale = new $.tale();
+    var appCode = undefined;
+    // 初始化修改ENV弹出框
+    $("#update-env").on("show.bs.modal",function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var tr = btnThis.closest("tr");
+
+        $("#update-env-id").val(btnThis.data("id"));
+        $("#update-env-appcode").val($.trim(tr.find(".env-appcode").text()));
+        $("#update-env-name").val($.trim(tr.find(".env-name").text()));
+        $("#update-env-intro").val($.trim(tr.find(".env-intro").text()));
+    });
+
+    // 更新env
+    $("#update-env-save").click(function () {
+        var id = $.trim($("#update-env-id").val());
+        var name = $.trim($("#update-env-name").val());
+        var intro = $.trim($("#update-env-intro").val());
+
+        var data = {id:id,name:name,intro:intro};
+        tale.post({
+            url:'/env/update-env',
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    tale.alertOkAndReload("更新成功!");
+                }else {
+                    tale.alertError(result.msg || "更新失败");
+                }
+            }
+        });
+
+    });
+
+    // 删除APP
+    $(".env-delete").click(function () {
+        var id = $(this).data("id");
+        tale.alertConfirm({
+            title: '确定删除该项吗?',
+            then: function () {
+                tale.post({
+                    url: '/env/delete-env',
+                    data: {id: id},
+                    success: function (result) {
+                        if (result && result.success) {
+                            tale.alertOkAndReload('删除成功');
+                        } else {
+                            tale.alertError(result.msg || '删除失败');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    // 载入所有的App下拉列表
+    function loadAllApp(){
+        tale.post({
+            url: '/app/get-all-app',
+            data: null,
+            success: function (result) {
+                if (result && result.success) {
+                    $(".all-app-select").empty();
+                    $(".all-app-select").append("<option value=''>全部</option>");
+                    for (i = 0; i < result.payload.length; i++) {
+                        $(".all-app-select").append("<option value='"+result.payload[i].code+"'>"+result.payload[i].code+"</option>");
+                    }
+
+                } else {
+                    tale.alertError(result.msg || '获取下拉列表失败');
+                }
+            }
+        });
+    }
+
+    // 载入某个App下的所有环境
+    function loadAllEnv(){
+        var data = {appCode:appCode};
+        tale.post({
+            url:'/env/get-env',
+            data:data,
+            success: function (result) {
+                if(result && result.success){
+                    $("tbody").empty();
+                    for (i = 0; i < result.payload.list.length; i++) {
+
+                       var tr=  "<tr class=\"text-center\" >\n" +
+                                "     <td class=\"env-name\">"+result.payload.list[i].name+"</td>\n" +
+                                "     <td class=\"env-appcode\">"+result.payload.list[i].appCode+"</td>\n" +
+                                "     <td >"+result.payload.list[i].updateTime+"</td>\n" +
+                                "     <td >"+result.payload.list[i].updateBy+"</td>\n" +
+                                "     <td class=\"env-intro\" >"+result.payload.list[i].intro+"</td>\n" +
+                                "     <td>\n" +
+                                "        <button type=\"button\" data-id="+result.payload.list[i].id+"\n" +
+                                "                class=\"btn btn-info btn-xs env-update\" data-toggle=\"modal\"\n" +
+                                "                data-target=\"#update-env\">修改\n" +
+                                "        </button>\n" +
+                                "     </td>\n" +
+                                "     <td>\n" +
+                                "         <button type=\"button\" data-id="+result.payload.list[i].id+" \n" +
+                                "                 class=\"btn btn-danger btn-xs env-delete\">删除\n" +
+                                "          </button>\n" +
+                                "     </td>\n" +
+                                "</tr>";
+                        $("tbody").append(tr);
+                    }
+
+                } else {
+                    tale.alertError(result.msg || '获取环境列表失败');
+                }
+            }
+        })
+    }
+
+    $(function () {
+        loadAllApp();// 载入所有的APP下拉列表
+        loadAllEnv(); // 刚载入页面时获取所有的环境列表
+        $('.all-app-select').change(function(){
+            appCode = $(this).val();
+            loadAllEnv();
+        });
+    });
+    /*]]>*/
+
+</script>
+</body>
+</html>

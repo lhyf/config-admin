@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='App列表',active='app',group='app'">
+<body>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}" id="logo">参数配置中心
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{/logout}">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="comm/header::html"></div>
+        <!-- 右侧具体内容栏目 -->
+        <div class="col-md-11">
+            <div class="row">
+
+                <div class="col-md-2">
+                    <div class="text-info">
+                        <h6>系统APP管理</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;background-color: #ffffff">
+                <div class="col-md-12">
+                    <div class="row" style="padding-top: 15px;">
+                        <div class="col-md-1 col-md-offset-11">
+                            <button class="btn btn-green btn-xs" data-toggle="modal" data-target="#add-app-modal">
+                                添加APP
+                            </button>
+                        </div>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th class="text-center">项目名</th>
+                                <th class="text-center">AppCode</th>
+                                <th class="text-center">更新时间</th>
+                                <th class="text-center">修改人</th>
+                                <th class="text-center">备注</th>
+                                <th class="text-center">修改</th>
+                                <th class="text-center">删除</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="text-center" th:each="app,appStat : ${apps.list}">
+                                <td class="app-appname" th:text="${app.appName}"></td>
+                                <td class="app-appcode" th:text="${app.appCode}"></td>
+                                <td th:text="${#dates.format(app.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td th:text="${app.updateBy}"></td>
+                                <td class="app-appintro" th:text="${app.intro}"></td>
+                                <td>
+                                    <button type="button" th:data-id="${app.id}"
+                                            class="btn btn-info btn-xs app-update" data-toggle="modal"
+                                            data-target="#update-app">修改
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" th:data-id="${app.id}"
+                                            class="btn btn-danger btn-xs app-delete">删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <!--弹出框开始-->
+                <!--弹出窗口 添加APP-->
+                <div class="modal fade" id="add-app-modal" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">添加APP</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="add-app-code" class="col-md-3 control-label">AppCode：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="add-app-code"
+                                                       placeholder="请勿使用中文输入">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="add-app-name" class="col-md-3 control-label">APP名：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="add-app-name"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="add-app-intro" class="col-md-3 control-label">备注：</label>
+                                            <div class="col-md-8">
+                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                              id="add-app-intro"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="add-app-save">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+                <!--弹出窗口 修改APP-->
+                <div class="modal fade" id="update-app" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" >更新APP</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="update-app-code" class="col-md-3 control-label">AppCode：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="hidden" id="update-app-id" >
+                                                <input type="text" style="color: #0f0f0f" class="form-control input-lg duiqi" id="update-app-code" readonly
+                                                       placeholder="请勿使用中文输入">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="update-app-name" class="col-md-3 control-label">APP名：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="update-app-name"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="update-app-intro" class="col-md-3 control-label">备注：</label>
+                                            <div class="col-md-8">
+                                    <textarea class="form-control input-lg duiqi" rows="3"
+                                              id="update-app-intro"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="update-app-save">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+                <!--弹出框结束-->
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="comm/footer::html"></div>
+</div>
+<script th:src="@{//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.js}"></script>
+<script th:src="@{/js/base.js}"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+
+    // 添加项目
+    var tale = new $.tale();
+    $('#add-app-save').click(function () {
+        var code = $('#add-app-code').val();
+        var name = $('#add-app-name').val();
+        var intro = $('#add-app-intro').val();
+
+        if(code == '' || name == ''){
+            tale.alertError("AppCode与APP名不能为空!");
+            return;
+        }
+        var data = {code:code,name: name, intro: intro};
+        tale.post({
+            url: '/app/add-app',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOkAndReload("添加成功");
+//                    $('#add-app-modal').modal('hide');
+                } else {
+                    tale.alertError(result.msg || '添加失败');
+                }
+            }
+        });
+
+    });
+
+    // 初始化修改APP弹出框
+    $("#update-app").on("show.bs.modal",function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var tr = btnThis.closest("tr");
+
+        $("#update-app-id").val(btnThis.data("id"));
+        $("#update-app-code").val($.trim(tr.find(".app-appcode").text()));
+        $("#update-app-name").val($.trim(tr.find(".app-appname").text()));
+        $("#update-app-intro").val($.trim(tr.find(".app-appintro").text()));
+    })
+
+    // 更新APP
+    $("#update-app-save").click(function () {
+        var id = $.trim($("#update-app-id").val());
+        var name = $.trim($("#update-app-name").val());
+        var intro = $.trim($("#update-app-intro").val());
+
+        var data = {id:id,name:name,intro:intro};
+        tale.post({
+            url:'/app/update-app',
+            data:data,
+            success:function (result) {
+                if(result && result.success){
+                    tale.alertOkAndReload("更新成功!");
+                }else {
+                    tale.alertError(result.msg || "更新失败");
+                }
+            }
+        });
+
+    });
+
+    // 删除APP
+    $(".app-delete").click(function () {
+        var id = $(this).data("id");
+        tale.alertConfirm({
+            title: '确定删除该项吗?',
+            then: function () {
+                tale.post({
+                    url: '/app/delete-app',
+                    data: {id: id},
+                    success: function (result) {
+                        if (result && result.success) {
+                            tale.alertOkAndReload('删除成功');
+                        } else {
+                            tale.alertError(result.msg || '删除失败');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+    /*]]>*/
+
+</script>
+</body>
+</html>

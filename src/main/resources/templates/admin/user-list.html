@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="title='用户列表',active='user',group='user'">
+<body>
+<div class="navbar navbar-duomi navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/index}" id="logo">参数配置中心
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{/logout}">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="comm/header::html"></div>
+        <!-- 右侧具体内容栏目 -->
+        <div class="col-md-11">
+            <div class="row">
+
+                <div class="col-md-2">
+                    <div class="text-info">
+                        <h6>系统用户管理</h6>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" style="margin-top: 10px;background-color: #ffffff">
+
+                <div class="col-md-12">
+                    <div class="row" style="padding-top: 15px;">
+                        <div class="col-md-1 col-md-offset-11">
+                            <button class="btn btn-green btn-xs" data-toggle="modal" data-target="#add-user-btn">添加用户
+                            </button>
+                        </div>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th class="text-center">用户名</th>
+                                <th class="text-center">昵称</th>
+                                <th class="text-center">创建时间</th>
+                                <th class="text-center">最后登录时间</th>
+                                <th class="text-center">修改</th>
+                                <th class="text-center">状态</th>
+                                <th class="text-center">删除</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="text-center" th:each="user,userStat : ${users.list}">
+                                <td class="user-username" th:text="${user.username}"></td>
+                                <td class="user-nickname" th:text="${user.nickname}"></td>
+                                <td th:text="${#dates.format(user.addTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td th:text="${#dates.format(user.loginTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                <td>
+                                    <button type="button" th:data-id="${user.id}"
+                                            class="btn btn-info btn-xs user-update" data-toggle="modal"
+                                            data-target="#update-user-btn">修改
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" th:data-id="${user.id}" th:data-status="${user.userStatus}"
+                                           th:text="${user.userStatus }==0?'禁用':'启用'" th:class="${user.userStatus }==0?'btn btn-warning btn-xs user-status-btn':'btn btn-success btn-xs user-status-btn'">
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" th:data-id="${user.id}"
+                                            class="btn btn-danger btn-xs user-delete">删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <!--弹出框开始-->
+                <!--添加用户-->
+                <div class="modal fade" id="add-user-btn" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 30%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">添加用户</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="add-username" class="col-md-3 control-label">用户名：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="add-username"
+                                                       placeholder="英文字符">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="add-nickname" class="col-md-3 control-label">昵称：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi" id="add-nickname"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="add-password" class="col-md-3 control-label">密码：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="password" class="form-control input-lg duiqi"
+                                                       id="add-password">
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="user-add">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+                <!--修改用户-->
+                <div class="modal fade" id="update-user-btn" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document" style="width: 30%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">更新用户</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <form class="form-horizontal">
+                                        <div class="form-group ">
+                                            <label for="add-username" class="col-md-3 control-label">用户名：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="hidden" id="update-id">
+                                                <input style="color: #0f0f0f" type="text" class="form-control input-lg duiqi" readonly
+                                                       id="update-username"
+                                                       placeholder="英文字符">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="add-nickname" class="col-md-3 control-label">昵称：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="text" class="form-control input-lg duiqi"
+                                                       id="update-nickname"
+                                                       placeholder="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="add-password" class="col-md-3 control-label">密码：</label>
+                                            <div class="col-md-8 ">
+                                                <input type="password" class="form-control input-lg duiqi"
+                                                       id="update-password">
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-xs btn-xs btn-white" data-dismiss="modal">取 消
+                                </button>
+                                <button type="button" class="btn btn-xs btn-xs btn-green" id="user-update">保 存</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
+
+                <!--弹出框结束-->
+            </div>
+
+        </div>
+    </div>
+
+    <div th:replace="comm/footer::html"></div>
+</div>
+<script th:src="@{//cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.js}"></script>
+<script th:src="@{/js/base.js}"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+
+    var tale = new $.tale();
+
+    // 添加用户
+    $("#user-add").click(function () {
+        var username = $.trim($("#add-username").val());
+        var nickname = $.trim($("#add-nickname").val());
+        var password = $.trim($("#add-password").val());
+
+        if (username == '' || nickname == '' || password == '') {
+            tale.alertError("请填写完整信息!");
+            return;
+        }
+
+        var data = {username: username, nickname: nickname, password: password};
+        tale.post({
+            url: '/user/add-user',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOkAndReload("添加用户成功!")
+                } else {
+                    tale.alertError(result.msg || "添加用户失败!");
+                }
+            }
+        });
+    });
+
+    // 初始化修改用户弹出框
+    $("#update-user-btn").on("show.bs.modal", function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var id = $(btnThis).data("id");
+        var username = $(btnThis).closest("tr").find("td[class='user-username']").text();
+        var nickname = $(btnThis).closest("tr").find("td[class='user-nickname']").text();
+//        var status = $(btnThis).closest("tr").find("td[class='user-status']").data('status');
+        $("#update-id").val(id);
+        $("#update-username").val(username);
+        $("#update-nickname").val(nickname);
+
+    });
+
+    // 提交用户修改
+    $("#user-update").click(function () {
+        var id = $("#update-id").val();
+        var username = $.trim($("#update-username").val());
+        var nickname = $.trim($("#update-nickname").val());
+        var password = $.trim($("#update-password").val());
+
+        if (username == '' || nickname == '') {
+            tale.alertError("请填写完整信息!");
+            return;
+        }
+        var data = {id: id, username: username, nickname: nickname, password: password};
+        tale.post({
+            url: '/user/update-user',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    tale.alertOkAndReload("更新用户成功!")
+                } else {
+                    tale.alertError(result.msg || "更新用户失败!");
+                }
+            }
+        });
+
+    });
+
+    // 修改用户状态
+    $(".user-status-btn").click(function () {
+        var btn = $(this);
+        var id = btn.data("id");
+        var status = btn.data("status");
+        var data = {id: id, status: status};
+        tale.post({
+            url: '/user/update-status',
+            data: data,
+            success: function (result) {
+                if (result && result.success) {
+                    if(status == 1){
+                        // 禁用状态
+                        btn.removeClass("btn-success");
+                        btn.addClass("btn-warning");
+                        btn.text("禁用");
+                        btn.data("status",0);
+                    }else{
+                        // 启用状态
+                        btn.removeClass("btn-warning");
+                        btn.addClass("btn-success");
+                        btn.text("启用");
+                        btn.data("status",1);
+                    }
+                } else {
+                    tale.alertError(result.msg || "修改状态失败!");
+                }
+            }
+        });
+
+    });
+
+    // 刪除用戶
+    $(".user-delete").click(function () {
+        var btn = $(this);
+        var id = btn.data("id");
+        tale.alertConfirm({
+            title: '确定删除该项吗?',
+            then: function () {
+                tale.post({
+                    url: '/user/delete-user',
+                    data: {id: id},
+                    success: function (result) {
+                        if (result && result.success) {
+                            tale.alertOkAndReload('删除成功');
+                        } else {
+                            tale.alertError(result.msg || '删除失败');
+                        }
+                    }
+                });
+            }
+        });
+
+    });
+
+    /*]]>*/
+
+</script>
+</body>
+
+</html>
