@@ -23,3 +23,6 @@
  ①. 获取某个namespace下的配置: http://ip:prot/api/config/appid/environment/namespace
  ②. 获取环境下所有namespace 的配置 http://ip:prot/api/config/appid/environment
 返回格式为包含各个配置项形式的json串
+
+**初始默认登录账号密码**
+tom/123456
