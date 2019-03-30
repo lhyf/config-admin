@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lhyf.config.mapper.NameSpaceMapper">
+  <resultMap id="BaseResultMap" type="org.lhyf.config.pojo.NameSpace">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="env_id" jdbcType="INTEGER" property="envId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="space_code" jdbcType="VARCHAR" property="spaceCode" />
+  </resultMap>
+
+  <resultMap id="nameSpaceVOrsultMap" type="org.lhyf.config.model.Vo.NameSpaceVo">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="intro" property="intro" jdbcType="VARCHAR" />
+    <result column="space_code" property="spaceCode" jdbcType="VARCHAR" />
+
+    <collection property="items" select="org.lhyf.config.mapper.ItemMapper.selectItemVOByNameSpaceId"
+                column="id" fetchType="eager"></collection>
+
+  </resultMap>
+
+
+  <!--List<NameSpaceVo> selectNameSpaceVOByEnvId(Integer envId);-->
+  <select id="selectNameSpaceVOByEnvId" resultMap="nameSpaceVOrsultMap">
+    SELECT id,name,update_time,update_by,intro,space_code from t_namespace where env_id=#{envId}
+  </select>
+
+  <!--List<NameSpaceVo> selectNameSpaceByEnvId(Integer envId);-->
+  <select id="selectNameSpaceByEnvId" resultType="org.lhyf.config.model.Vo.NameSpaceVo">
+    select id,name,space_code from t_namespace n where env_id=#{envId};
+  </select>
+
+  <!--List<TNamespace> getNameSpaceByIds(List<Integer> nsIdList);-->
+  <select id="getNameSpaceByIds" resultType="org.lhyf.config.pojo.NameSpace">
+    select *
+    from t_namespace
+    <foreach collection="list" item="id" separator="," open="where id in(" close=")" >
+      #{id}
+    </foreach>
+  </select>
+
+</mapper>

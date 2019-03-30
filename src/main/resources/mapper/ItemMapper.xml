@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lhyf.config.mapper.ItemMapper">
+  <resultMap id="BaseResultMap" type="org.lhyf.config.pojo.Item">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="namespace_id" jdbcType="INTEGER" property="namespaceId" />
+    <result column="property" jdbcType="VARCHAR" property="property" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+
+
+  <!--List<ItemVo> selectItemVOByNameSpaceId(Integer namespaceId);-->
+  <select id="selectItemVOByNameSpaceId" resultType="org.lhyf.config.model.Vo.ItemVo">
+    SELECT id,property,value,intro,update_time,update_by from t_item where namespace_id = #{namespaceId}
+  </select>
+
+  <!--List<TItem> selectItemByAppCodeAndEnvNameAndNScode(@Param("appcode") String appcode, @Param("envname") String envname,@Param("nscode") String nscode);-->
+  <select id="selectItemByAppCodeAndEnvNameAndNScode" resultType="org.lhyf.config.pojo.Item">
+    select i.property,i.value
+    from t_app app,t_env env,t_namespace ns,t_item i
+    where app.app_code = env.app_code
+    and env.id = ns.env_id
+    and i.namespace_id = ns.id
+    and app.app_code = #{appcode}
+    and env.name = #{envname}
+    and ns.space_code= #{nscode}
+  </select>
+
+  <!--List<TItem> selectItemByAppCodeAndEnvName(@Param("appcode") String appcode, @Param("envname") String envname);-->
+  <select id="selectItemByAppCodeAndEnvName" resultType="org.lhyf.config.pojo.Item">
+    select i.property,i.value
+    from t_app app,t_env env,t_namespace ns,t_item i
+    where app.app_code = env.app_code
+    and env.id = ns.env_id
+    and i.namespace_id = ns.id
+    and app.app_code = #{appcode}
+    and env.name = #{envname}
+  </select>
+
+  <!--List<TItem> selectItemByEnvIdAndProperty(@Param("envId") Integer envId,@Param("property") String property);-->
+  <select id="selectItemByEnvIdAndProperty" resultType="org.lhyf.config.pojo.Item">
+    select
+    i.id, i.namespace_id, i.property, i.value, i.intro, i.create_time, i.create_by, i.update_time, i.update_by
+    from t_env env,t_namespace ns,t_item i
+    where env.id = ns.env_id
+    and i.namespace_id = ns.id
+    and env.id = #{envId}
+    and i.property= #{property}
+  </select>
+
+  <!--List<TItem> getItemByIds(Integer[] itemId);-->
+  <select id="getItemByIds" resultType="org.lhyf.config.pojo.Item">
+    select *
+    from t_item
+    <foreach collection="array" item="id" separator="," open="where id in(" close=")">
+      #{id}
+    </foreach>
+  </select>
+
+</mapper>

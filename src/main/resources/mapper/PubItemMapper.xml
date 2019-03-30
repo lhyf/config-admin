@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lhyf.config.mapper.PubItemMapper">
+  <resultMap id="BaseResultMap" type="org.lhyf.config.pojo.PubItem">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="pub_namespace_id" jdbcType="INTEGER" property="pubNamespaceId" />
+    <result column="property" jdbcType="VARCHAR" property="property" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+  </resultMap>
+
+  <!--PubItemVo selectPubItemVoByPubNamespaceId(Integer spId);-->
+  <select id="selectPubItemVoByPubNamespaceId" resultType="org.lhyf.config.model.Vo.PubItemVo" >
+    select id,property,value,intro from t_pub_item where pub_namespace_id = #{nsId}
+  </select>
+
+  <!--List<TPubItem> getPubItemsByIds(Integer[] pubItemId);-->
+  <select id="getPubItemsByIds" resultType="org.lhyf.config.pojo.PubItem" >
+    select *
+    from t_pub_item
+    <foreach collection="array" item="itemId" separator="," open="where id in(" close=")">
+      #{itemId}
+    </foreach>
+  </select>
+
+</mapper>

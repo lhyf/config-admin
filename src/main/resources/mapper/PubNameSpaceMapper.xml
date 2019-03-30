@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.lhyf.config.mapper.PubNameSpaceMapper">
+  <resultMap id="BaseResultMap" type="org.lhyf.config.pojo.PubNameSpace">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="intro" jdbcType="VARCHAR" property="intro" />
+    <result column="space_code" jdbcType="VARCHAR" property="spaceCode" />
+  </resultMap>
+
+
+  <resultMap id="pubNameSpaceWithItemResultMap" type="org.lhyf.config.model.Vo.PubNameSpaceVo">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="intro" property="intro" jdbcType="VARCHAR"/>
+    <collection property="items" select="org.lhyf.config.mapper.PubItemMapper.selectPubItemVoByPubNamespaceId"
+                column="id" fetchType="eager"/>
+  </resultMap>
+
+  <!--只返回namespace下存在item的记录-->
+  <!--List<PubNameSpaceVo> getPubNameSpaceWithItem();-->
+  <select id="getPubNameSpaceWithItem" resultMap="pubNameSpaceWithItemResultMap">
+    select n.id,n.name,n.intro from t_pub_namespace n where exists (SELECT i.id from t_pub_item i where i.pub_namespace_id=n.id)
+  </select>
+
+  <!--List<TPubNamespace> getPubNameSpaceByIds(List<Integer> nsIdList);-->
+  <select id="getPubNameSpaceByIds" resultType="org.lhyf.config.pojo.PubNameSpace">
+    select *
+    from t_pub_namespace
+    <foreach collection="nsIdList" item="id" separator="," open=" where id in (" close=")">
+      #{id}
+    </foreach>
+  </select>
+
+</mapper>

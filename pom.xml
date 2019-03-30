@@ -90,11 +90,11 @@
             <version>1.2.46</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.4.5</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.mybatis</groupId>-->
+            <!--<artifactId>mybatis</artifactId>-->
+            <!--<version>3.4.5</version>-->
+        <!--</dependency>-->
         <!--分页插件-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -106,6 +106,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!--通用mapper starter-->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>2.0.4</version>
         </dependency>
 
         <!--热部署-->
@@ -132,32 +139,65 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.mybatis.generator</groupId>
-                <artifactId>mybatis-generator-maven-plugin</artifactId>
-                <version>1.3.2</version>
-                <configuration>
-                    <!--配置文件的位置-->
-                    <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
-                    <verbose>true</verbose>
-                    <overwrite>true</overwrite>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>Generate MyBatis Artifacts</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.mybatis.generator</groupId>
-                        <artifactId>mybatis-generator-core</artifactId>
-                        <version>1.3.2</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+            <!--普通版本的Mybatis generator-->
+            <!--<plugin>-->
+                <!--<groupId>org.mybatis.generator</groupId>-->
+                <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
+                <!--<version>1.3.2</version>-->
+                <!--<configuration>-->
+                    <!--&lt;!&ndash;配置文件的位置&ndash;&gt;-->
+                    <!--<configurationFile>src/main/resources/generatorConfig.xml</configurationFile>-->
+                    <!--<verbose>true</verbose>-->
+                    <!--<overwrite>true</overwrite>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>Generate MyBatis Artifacts</id>-->
+                        <!--<goals>-->
+                            <!--<goal>generate</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>org.mybatis.generator</groupId>-->
+                        <!--<artifactId>mybatis-generator-core</artifactId>-->
+                        <!--<version>1.3.2</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+            <!--</plugin>-->
+
+
+            <!--使用通用Mapper插件-->
+            <!--<plugin>-->
+                <!--<groupId>org.mybatis.generator</groupId>-->
+                <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
+                <!--<version>1.3.6</version>-->
+
+                <!--&lt;!&ndash; 配置generatorConfig.xml配置文件的路径 &ndash;&gt;-->
+                <!--<configuration>-->
+                    <!--<configurationFile>-->
+                        <!--${basedir}/src/main/resources/generator/generatorConfig.xml-->
+                    <!--</configurationFile>-->
+                    <!--<overwrite>true</overwrite>-->
+                    <!--<verbose>true</verbose>-->
+                <!--</configuration>-->
+
+                <!--&lt;!&ndash; 配置generatorConfig.xml配置文件的路径 &ndash;&gt;-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>mysql</groupId>-->
+                        <!--<artifactId>mysql-connector-java</artifactId>-->
+                        <!--<version>5.1.29</version>-->
+                    <!--</dependency>-->
+                    <!--<dependency>-->
+                        <!--<groupId>tk.mybatis</groupId>-->
+                        <!--<artifactId>mapper</artifactId>-->
+                        <!--<version>4.0.0</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+            <!--</plugin>-->
+
 
         </plugins>
     </build>
