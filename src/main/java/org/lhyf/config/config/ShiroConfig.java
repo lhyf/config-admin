@@ -129,6 +129,8 @@ public class ShiroConfig {
         chains.put("/css/**", "perms[access]");
         chains.put("/fonts/**", "perms[access]");
 
+//        chains.put("/error/**", "anon");
+
         chains.put("/defaultKaptcha", "perms[access]");
         chains.put("/**", "perms");
 

@@ -8,21 +8,26 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /****
  * @author YF
  * @date 2018-07-13 19:16
  * @desc CustomExceptionHandler
  *
  **/
-@ControllerAdvice()
+@ControllerAdvice
 public class CustomExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomExceptionHandler.class);
 
-    @ResponseBody
+
     @ExceptionHandler(Exception.class)
-    public RestResponseBo handlerException(Exception e){
-        logger.error(ExceptionUtils.getStackTrace(e));
-        return RestResponseBo.fail(e.getMessage());
+    public String handlerException(Exception e, HttpServletRequest request){
+        request.setAttribute("javax.servlet.error.status_code",500);
+        request.setAttribute("code",500);
+        request.setAttribute("msg",e.getMessage());
+        logger.error("",e);
+        return "forward:/error";
     }
 }
